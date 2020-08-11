@@ -69,7 +69,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     observers: ['_modalChanged(modal, __readied)'],
 
-    listeners: {'tap': '_onDialogClick'},
+    listeners: {
+      'tap': '_onDialogClick',
+      'keyup': '_onDialogKeyup'
+    },
 
     /**
      * @return {void}
@@ -117,6 +120,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * or dialog-confirm attribute.
      */
     _onDialogClick: function(event) {
+      this._detectDialogDismissConfirm(event)
+
+    },
+
+    /**
+     * Dismisses the dialog if user hit enter or space on an element with
+     * dialog-dismiss or dialog-confirm attribute.
+     */
+    _onDialogKeyup: function(event) {
+      if (event.keyCode !== 32 && event.keyCode !== 13) return;
+      this._detectDialogDismissConfirm(event)
+    },
+
+    
+    _detectDialogDismissConfirm: function(event) {
       // Search for the element with dialog-confirm or dialog-dismiss,
       // from the root target until this (excluded).
       var path = Polymer.dom(event).path;
